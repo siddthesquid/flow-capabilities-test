@@ -64,16 +64,19 @@ describe("basic-test", () => {
     await tx("PrivilegedAccount/sayHello", PrivilegedAccount);
 
     // `ResourceHolder` moves the resource to another location.
+    // and revokes the private capability.
     // `PrivilegedAccount` cannot call `sayHello` anymore, as expected.
     await tx("ResourceHolder/moveResource", ResourceHolder);
     await tx("PrivilegedAccount/sayHello", PrivilegedAccount);
 
-    // `ResourceHolder` moves the resource back.
+    // `ResourceHolder` moves the resource back and relinks
+    // a new private capability in the same location.
     // `PrivilegedAccount` should not be able to call `sayHello`
-    // anymore, but is still able to. Now that `PrivilegedAccount` has
+    // anymore (imo), but is still able to. Now that `PrivilegedAccount` has
     // this capability, `ResourceHolder` cannot stop `PrivilegedAccount`
-    // from accessing `InsecureCapability` from `/storage/resource`,
-    // and so that storage spot may never be used again.
+    // from accessing `InsecureCapability` from `/private/resource`,
+    // and so that storage spot may never be used again. If it is, then
+    // `PrivilegedAccount` has unauthorized access.
     await tx("ResourceHolder/moveResourceBack", ResourceHolder);
     await tx("PrivilegedAccount/sayHello", PrivilegedAccount);
   });

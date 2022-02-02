@@ -6,5 +6,9 @@ transaction() {
       <- signer.load<@InsecureResource.Resource>(from: InsecureResource.ResourcePath2)!,
       to: InsecureResource.ResourcePath
     )
+    signer.link<&{InsecureResource.InsecureCapability}>(
+      InsecureResource.InsecureCapabilityPath,
+      target: InsecureResource.ResourcePath
+    )!
   }
 }
